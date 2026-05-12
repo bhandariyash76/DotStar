@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -5,7 +6,10 @@ import CollectionGrid from './components/CollectionGrid';
 import FeaturedProducts from './components/FeaturedProducts';
 import Newsletter from './components/Newsletter';
 import Footer from './components/Footer';
+import WaitingListPage from './components/WaitingListPage';
 import { products, collections, categories } from './lib/data';
+
+const ACCESS_STORAGE_KEY = 'dotstar_access';
 
 function Home() {
   const newArrivals = products.filter((p) => p.isNew);
@@ -71,6 +75,32 @@ function Home() {
 }
 
 function App() {
+  const [isUnlocked, setIsUnlocked] = useState<boolean>(() => {
+    // Check localStorage on initial load
+    return localStorage.getItem(ACCESS_STORAGE_KEY) === 'true';
+  });
+
+  useEffect(() => {
+    // Listen for changes to localStorage from other tabs
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === ACCESS_STORAGE_KEY) {
+        setIsUnlocked(e.newValue === 'true');
+      }
+    };
+    window.addEventListener('storage', handleStorage);
+    return () => window.removeEventListener('storage', handleStorage);
+  }, []);
+
+  const handleUnlock = () => {
+    localStorage.setItem(ACCESS_STORAGE_KEY, 'true');
+    setIsUnlocked(true);
+  };
+
+  // Show waiting list page if not unlocked
+  if (!isUnlocked) {
+    return <WaitingListPage onUnlock={handleUnlock} />;
+  }
+
   return (
     <Router>
       <div className="font-sans bg-primary text-ink antialiased min-h-screen">
