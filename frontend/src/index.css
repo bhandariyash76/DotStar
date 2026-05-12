@@ -1,0 +1,147 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Base Reset ─────────────────────────────────────────────────────────── */
+
+:root {
+  --color-accent: #D4642A;
+  --color-bg: #FAFAF8;
+  --color-ink: #1A1A1A;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-ink);
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  overflow-x: hidden;
+}
+
+::selection {
+  background-color: #D4642A;
+  color: #FAFAF8;
+}
+
+/* ─── Scrollbar ──────────────────────────────────────────────────────────── */
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F0EEEB;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #D1CFC9;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #B0AFA8;
+}
+
+/* ─── Typography ─────────────────────────────────────────────────────────── */
+
+h1, h2, h3, h4, h5, h6 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+/* ─── Focus Styles ───────────────────────────────────────────────────────── */
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* ─── Utility Animations ─────────────────────────────────────────────────── */
+
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate-on-scroll.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─── Image Hover ────────────────────────────────────────────────────────── */
+
+.img-hover-zoom {
+  overflow: hidden;
+}
+
+.img-hover-zoom img {
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.img-hover-zoom:hover img {
+  transform: scale(1.05);
+}
+
+/* ─── Button Base ────────────────────────────────────────────────────────── */
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-8 py-3
+           bg-ink text-primary text-caption uppercase tracking-widest
+           transition-all duration-300 ease-smooth
+           hover:bg-accent hover:text-primary
+           focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2;
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center justify-center px-8 py-3
+           border border-ink text-ink text-caption uppercase tracking-widest
+           transition-all duration-300 ease-smooth
+           hover:bg-ink hover:text-primary
+           focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 text-caption uppercase tracking-widest
+           text-ink-secondary transition-colors duration-300
+           hover:text-accent;
+  }
+
+  /* Divider */
+  .divider {
+    @apply w-full h-px bg-border;
+  }
+}
+
+/* ─── Marquee ────────────────────────────────────────────────────────────── */
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 30s linear infinite;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
