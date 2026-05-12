@@ -293,7 +293,7 @@ export const categories: Category[] = [
 // ─── Site Config ────────────────────────────────────────────────────────────
 
 export const siteConfig: SiteConfig = {
-  name: ".Star",
+  name: "DotStar",
   description: "Premium streetwear, minimal by design.",
   navigation: [
     { label: "Shop", href: "/shop" },

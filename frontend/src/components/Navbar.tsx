@@ -4,9 +4,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { siteConfig } from "@/lib/data";
-import { Suspense, lazy } from 'react';
-
-const ThreeLogo = lazy(() => import('./ThreeLogo'));
+import DotStarLogo from './DotStarLogo';
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -55,9 +53,7 @@ export default function Navbar() {
               className="relative md:-ml-8"
               id="nav-logo"
             >
-              <Suspense fallback={<div className="w-16 h-16" />}>
-                <ThreeLogo />
-              </Suspense>
+              <DotStarLogo className="w-12 h-12" />
             </Link>
 
             {/* Desktop Nav */}
