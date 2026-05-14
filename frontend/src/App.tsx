@@ -9,13 +9,12 @@ import Footer from './components/Footer';
 import WaitingListPage from './components/WaitingListPage';
 import LatestDropSlider from './components/LatestDropSlider';
 import CollectionBannerSlider from './components/CollectionBannerSlider';
-import { products, categories } from './lib/data';
+import { products } from './lib/data';
 
 const ACCESS_STORAGE_KEY = 'dotstar_access';
 
 function Home() {
   const newArrivals = products.filter((p) => p.isNew);
-  const featured = products.filter((p) => p.isFeatured);
 
   return (
     <main>
