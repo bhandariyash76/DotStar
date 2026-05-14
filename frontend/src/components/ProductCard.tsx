@@ -2,9 +2,9 @@
 
 import { useRef, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-/* import Image from "next/image" removed */
 import { Product } from "@/types/models";
 import { formatPrice, cn, staggerDelay } from "@/lib/utils";
+import { Bookmark, Plus } from "lucide-react";
 
 interface ProductCardProps {
   product: Product;
@@ -36,73 +36,81 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
     <div
       ref={cardRef}
       className={cn(
-        "group opacity-0 translate-y-6 transition-all duration-700 ease-smooth",
+        "group opacity-0 translate-y-6 transition-all duration-700 ease-smooth flex flex-col",
         visible && "opacity-100 translate-y-0"
       )}
       style={{ transitionDelay: staggerDelay(index, 120) }}
     >
-      <Link to={`/products/${product.slug}`} className="block" id={`product-card-${product.slug}`}>
+      <Link to={`/products/${product.slug}`} className="block relative" id={`product-card-${product.slug}`}>
         {/* Image Container */}
-        <div className="img-hover-zoom relative aspect-[4/5] bg-secondary mb-4 overflow-hidden">
+        <div className="relative aspect-[3/4] bg-secondary mb-3 rounded-2xl overflow-hidden">
           {/* Actual Product Image with zoom effect */}
           <img 
             src={product.images[0]?.src || '/products/tee-1.jpg'} 
             alt={product.images[0]?.alt || product.name} 
-           
-           
-            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-smooth group-hover:scale-110"
+            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-smooth group-hover:scale-105"
           />
 
           {/* Badges */}
           <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
             {product.isNew && (
-              <span className="text-[10px] uppercase tracking-widest font-medium bg-ink text-primary px-2.5 py-1">
+              <span className="text-[10px] uppercase tracking-widest font-medium bg-white/90 text-ink px-2 py-0.5 rounded-sm backdrop-blur-md">
                 New
               </span>
             )}
             {hasDiscount && (
-              <span className="text-[10px] uppercase tracking-widest font-medium bg-accent text-primary px-2.5 py-1">
+              <span className="text-[10px] uppercase tracking-widest font-medium bg-accent text-white px-2 py-0.5 rounded-sm">
                 Sale
               </span>
             )}
           </div>
 
-          {/* Quick add overlay */}
-          <div className="absolute inset-x-0 bottom-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-smooth z-10">
-            <button className="w-full py-2.5 bg-ink/90 backdrop-blur-sm text-primary text-overline uppercase tracking-widest hover:bg-accent transition-colors duration-300">
-              Quick Add
-            </button>
+          {/* Bookmark Icon */}
+          <button 
+            className="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-transparent hover:bg-white/20 transition-colors"
+            onClick={(e) => {
+              e.preventDefault();
+              // bookmark logic here
+            }}
+          >
+            <Bookmark className="w-5 h-5 text-white drop-shadow-md" />
+          </button>
+
+          {/* Pagination Dots (Visual) */}
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+            <div className="w-1.5 h-1.5 rounded-full bg-white"></div>
+            <div className="w-1.5 h-1.5 rounded-full bg-white/50"></div>
+            <div className="w-1.5 h-1.5 rounded-full bg-white/50"></div>
           </div>
         </div>
 
-        {/* Details */}
-        <div className="space-y-1.5">
-          {/* Color dots */}
-          <div className="flex gap-1.5">
-            {product.colors.map((color) => (
-              <span
-                key={color.hex}
-                className="w-3 h-3 rounded-full border border-border"
-                style={{ backgroundColor: color.hex }}
-                title={color.name}
-              />
-            ))}
-          </div>
-
-          <h3 className="text-body font-normal text-ink group-hover:text-accent transition-colors duration-300 leading-snug">
-            {product.name}
-          </h3>
-
-          <div className="flex items-center gap-2">
-            <span className="text-body font-medium">
-              {formatPrice(product.price)}
-            </span>
-            {hasDiscount && (
-              <span className="text-caption text-ink-muted line-through">
-                {formatPrice(product.compareAtPrice!)}
+        {/* Details Area */}
+        <div className="flex items-start justify-between px-1">
+          <div className="flex flex-col gap-0.5">
+            <h3 className="text-[13px] font-medium text-ink group-hover:text-accent transition-colors duration-300">
+              {product.name}
+            </h3>
+            <div className="flex items-center gap-2">
+              <span className="text-[12px] text-ink-secondary">
+                {formatPrice(product.price)}
               </span>
-            )}
+              {hasDiscount && (
+                <span className="text-[11px] text-ink-muted line-through">
+                  {formatPrice(product.compareAtPrice!)}
+                </span>
+              )}
+            </div>
           </div>
+          
+          <button 
+            className="mt-0.5 w-6 h-6 flex items-center justify-center text-ink-secondary hover:text-ink transition-colors"
+            onClick={(e) => {
+              e.preventDefault();
+              // quick add logic
+            }}
+          >
+            <Plus className="w-4 h-4" />
+          </button>
         </div>
       </Link>
     </div>

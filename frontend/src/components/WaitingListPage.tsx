@@ -71,16 +71,18 @@ export default function WaitingListPage({ onUnlock }: WaitingListPageProps) {
   const [codeSuccess, setCodeSuccess] = useState(false);
   const [emailSubmitted, setEmailSubmitted] = useState(false);
   const [pageExiting, setPageExiting] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const codeInputRef = useRef<HTMLInputElement>(null);
 
   // Animation phases
   const [phase, setPhase] = useState(0);
   // phase 0: nothing visible
   // phase 1: DOT STAR text appears (together, centered)
-  // phase 2: text splits apart + 3D logo rotates in
-  // phase 3: tagline + waitlist form + access code fade in
-
   useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+
     const timers = [
       setTimeout(() => setPhase(1), 400),    // Text appears
       setTimeout(() => {
@@ -89,7 +91,10 @@ export default function WaitingListPage({ onUnlock }: WaitingListPageProps) {
       }, 1200),   // Split + 3D logo reveal
       setTimeout(() => setPhase(3), 2600),   // Waitlist content appears
     ];
-    return () => timers.forEach(clearTimeout);
+    return () => {
+      timers.forEach(clearTimeout);
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
 
   const handleAccessCode = (e: React.FormEvent) => {
@@ -145,7 +150,7 @@ export default function WaitingListPage({ onUnlock }: WaitingListPageProps) {
               initial={{ opacity: 0 }}
               animate={{
                 opacity: phase >= 1 ? 1 : 0,
-                x: phase >= 2 ? '-56px' : '0px',
+                x: phase >= 2 ? (isMobile ? '-26px' : '-56px') : '0px',
               }}
               transition={{
                 opacity: { duration: 1, ease: 'easeOut' },
@@ -198,7 +203,7 @@ export default function WaitingListPage({ onUnlock }: WaitingListPageProps) {
               initial={{ opacity: 0 }}
               animate={{
                 opacity: phase >= 1 ? 1 : 0,
-                x: phase >= 2 ? '28px' : '0px',
+                x: phase >= 2 ? (isMobile ? '22px' : '28px') : '0px',
               }}
               transition={{
                 opacity: { duration: 1, ease: 'easeOut' },

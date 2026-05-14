@@ -2,12 +2,14 @@ import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
-import CollectionGrid from './components/CollectionGrid';
+
 import FeaturedProducts from './components/FeaturedProducts';
 import Newsletter from './components/Newsletter';
 import Footer from './components/Footer';
 import WaitingListPage from './components/WaitingListPage';
-import { products, collections, categories } from './lib/data';
+import LatestDropSlider from './components/LatestDropSlider';
+import CollectionBannerSlider from './components/CollectionBannerSlider';
+import { products, categories } from './lib/data';
 
 const ACCESS_STORAGE_KEY = 'dotstar_access';
 
@@ -32,41 +34,15 @@ function Home() {
         </p>
       </section>
 
-      <div className="divider max-w-[1440px] mx-auto" />
+      <LatestDropSlider />
 
-      <CollectionGrid collections={collections} />
+      <CollectionBannerSlider />
 
       <div className="divider max-w-[1440px] mx-auto" />
 
       <FeaturedProducts products={newArrivals} title="New Arrivals" subtitle="Just dropped" />
 
-      {/* Category Strip */}
-      <section className="py-16 bg-secondary" id="categories-section">
-        <div className="max-w-[1440px] mx-auto px-6 md:px-10">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {categories.map((cat) => (
-              <a
-                key={cat.id}
-                href={`/shop/${cat.slug}`}
-                className="group relative py-8 md:py-12 px-6 border border-border bg-surface hover:bg-ink transition-all duration-500 text-center"
-                id={`category-${cat.slug}`}
-              >
-                <p className="text-overline uppercase text-ink-muted group-hover:text-primary/60 transition-colors duration-500 mb-2">
-                  {cat.productCount} Styles
-                </p>
-                <h3 className="text-title text-ink group-hover:text-primary transition-colors duration-500">
-                  {cat.name}
-                </h3>
-                <p className="text-caption text-ink-secondary group-hover:text-primary/70 transition-colors duration-500 mt-1">
-                  {cat.description}
-                </p>
-              </a>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      <FeaturedProducts products={featured} title="Staff Picks" subtitle="Curated for you" />
 
       <Newsletter />
       <Footer />

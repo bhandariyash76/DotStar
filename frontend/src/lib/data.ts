@@ -12,8 +12,8 @@ export const products: Product[] = [
     compareAtPrice: 3500,
     currency: "INR",
     images: [
-      { src: "/products/tee-1.jpg", alt: "Washed Cotton Oversized Tee — Fog", width: 800, height: 1000 },
-      { src: "/products/tee-1b.jpg", alt: "Washed Cotton Oversized Tee — back view", width: 800, height: 1000 },
+      { src: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&q=80&w=800&h=1067", alt: "Washed Cotton Oversized Tee — Fog", width: 800, height: 1000 },
+      { src: "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&q=80&w=800&h=1067", alt: "Washed Cotton Oversized Tee — back view", width: 800, height: 1000 },
     ],
     category: "T-Shirts",
     categorySlug: "t-shirts",
@@ -38,7 +38,7 @@ export const products: Product[] = [
     price: 4500,
     currency: "INR",
     images: [
-      { src: "/products/cargo-1.jpg", alt: "Structured Cargo Pants — Olive", width: 800, height: 1000 },
+      { src: "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&q=80&w=800&h=1067", alt: "Structured Cargo Pants — Olive", width: 800, height: 1000 },
     ],
     category: "Bottoms",
     categorySlug: "bottoms",
@@ -62,7 +62,7 @@ export const products: Product[] = [
     price: 5200,
     currency: "INR",
     images: [
-      { src: "/products/hoodie-1.jpg", alt: "French Terry Hoodie — Clay", width: 800, height: 1000 },
+      { src: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&q=80&w=800&h=1067", alt: "French Terry Hoodie — Clay", width: 800, height: 1000 },
     ],
     category: "Hoodies",
     categorySlug: "hoodies",
@@ -86,7 +86,7 @@ export const products: Product[] = [
     price: 3800,
     currency: "INR",
     images: [
-      { src: "/products/shirt-1.jpg", alt: "Camp Collar Shirt — Sand", width: 800, height: 1000 },
+      { src: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ce3?auto=format&fit=crop&q=80&w=800&h=1067", alt: "Camp Collar Shirt — Sand", width: 800, height: 1000 },
     ],
     category: "Shirts",
     categorySlug: "shirts",
@@ -110,7 +110,7 @@ export const products: Product[] = [
     price: 5800,
     currency: "INR",
     images: [
-      { src: "/products/denim-1.jpg", alt: "Wide Leg Denim — Indigo", width: 800, height: 1000 },
+      { src: "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&q=80&w=800&h=1067", alt: "Wide Leg Denim — Indigo", width: 800, height: 1000 },
     ],
     category: "Bottoms",
     categorySlug: "bottoms",
@@ -134,7 +134,7 @@ export const products: Product[] = [
     compareAtPrice: 4900,
     currency: "INR",
     images: [
-      { src: "/products/knit-1.jpg", alt: "Quarter-Zip Knit — Cream", width: 800, height: 1000 },
+      { src: "https://images.unsplash.com/photo-1611312449408-fcece27cdbb7?auto=format&fit=crop&q=80&w=800&h=1067", alt: "Quarter-Zip Knit — Cream", width: 800, height: 1000 },
     ],
     category: "Sweatshirts",
     categorySlug: "sweatshirts",
@@ -158,7 +158,7 @@ export const products: Product[] = [
     price: 6500,
     currency: "INR",
     images: [
-      { src: "/products/jacket-1.jpg", alt: "Ripstop Jacket — Slate", width: 800, height: 1000 },
+      { src: "https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&q=80&w=800&h=1067", alt: "Ripstop Jacket — Slate", width: 800, height: 1000 },
     ],
     category: "Outerwear",
     categorySlug: "outerwear",
@@ -182,7 +182,7 @@ export const products: Product[] = [
     price: 3200,
     currency: "INR",
     images: [
-      { src: "/products/sweats-1.jpg", alt: "Relaxed Sweatpants — Ash", width: 800, height: 1000 },
+      { src: "https://images.unsplash.com/photo-1512411936166-5e58122247cc?auto=format&fit=crop&q=80&w=800&h=1067", alt: "Relaxed Sweatpants — Ash", width: 800, height: 1000 },
     ],
     category: "Bottoms",
     categorySlug: "bottoms",
