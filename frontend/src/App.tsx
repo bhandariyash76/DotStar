@@ -11,6 +11,8 @@ import LatestDropSlider from './components/LatestDropSlider';
 import CollectionBannerSlider from './components/CollectionBannerSlider';
 import { products } from './lib/data';
 
+import { ThemeProvider } from './lib/ThemeContext';
+
 const ACCESS_STORAGE_KEY = 'dotstar_access';
 
 function Home() {
@@ -41,8 +43,6 @@ function Home() {
 
       <FeaturedProducts products={newArrivals} title="New Arrivals" subtitle="Just dropped" />
 
-
-
       <Newsletter />
       <Footer />
     </main>
@@ -51,12 +51,10 @@ function Home() {
 
 function App() {
   const [isUnlocked, setIsUnlocked] = useState<boolean>(() => {
-    // Check localStorage on initial load
     return localStorage.getItem(ACCESS_STORAGE_KEY) === 'true';
   });
 
   useEffect(() => {
-    // Listen for changes to localStorage from other tabs
     const handleStorage = (e: StorageEvent) => {
       if (e.key === ACCESS_STORAGE_KEY) {
         setIsUnlocked(e.newValue === 'true');
@@ -71,20 +69,20 @@ function App() {
     setIsUnlocked(true);
   };
 
-  // Show waiting list page if not unlocked
-  if (!isUnlocked) {
-    return <WaitingListPage onUnlock={handleUnlock} />;
-  }
-
   return (
-    <Router>
-      <div className="font-sans bg-primary text-ink antialiased min-h-screen">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          {/* Add more routes like /shop, /cart, /login here later */}
-        </Routes>
-      </div>
-    </Router>
+    <ThemeProvider>
+      {!isUnlocked ? (
+        <WaitingListPage onUnlock={handleUnlock} />
+      ) : (
+        <Router>
+          <div className="font-sans bg-primary text-ink antialiased min-h-screen transition-colors duration-500">
+            <Routes>
+              <Route path="/" element={<Home />} />
+            </Routes>
+          </div>
+        </Router>
+      )}
+    </ThemeProvider>
   );
 }
 

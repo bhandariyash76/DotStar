@@ -2,66 +2,12 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ParticleBackground from './ParticleBackground';
 import Logo3D from './Logo3D';
+import { LetterD, LetterT, LetterS, LetterA, LetterR, MoonEclipseO, MetallicGradient } from './BrandText';
 
 const VALID_CODES = ['DOTSTAR2026', 'EARLYACCESS', 'VIP2026', 'DOTSTAR', 'EXCLUSIVEACCESS'];
 
 interface WaitingListPageProps {
   onUnlock: () => void;
-}
-
-/* Custom SVG letters matching the reference DOT.STAR font style */
-
-function LetterD({ className }: { className?: string }) {
-  return (
-    <svg className={`brand-svg-letter ${className || ''}`} viewBox="0 0 78 62" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M8 16H44C60 16 70 27 70 39C70 51 60 56 44 56H8" stroke="white" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-function LetterT({ className }: { className?: string }) {
-  return (
-    <svg className={`brand-svg-letter brand-svg-letter-t ${className || ''}`} viewBox="0 0 66 62" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M6 16H60M33 16V56" stroke="white" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-function LetterS({ className }: { className?: string }) {
-  return (
-    <svg className={`brand-svg-letter ${className || ''}`} viewBox="0 0 72 62" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M62 16H22C13 16 8 21 8 28C8 35 13 39 22 39H50C59 39 64 43 64 50C64 55 59 56 50 56H10" stroke="white" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-function LetterA({ className }: { className?: string }) {
-  return (
-    <svg className={`brand-svg-letter ${className || ''}`} viewBox="0 0 72 62" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      {/* Triangle A without crossbar — matching reference */}
-      <path d="M8 56L31 18C34 13 38 13 41 18L64 56" stroke="white" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-function LetterR({ className }: { className?: string }) {
-  return (
-    <svg className={`brand-svg-letter ${className || ''}`} viewBox="0 0 76 62" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M10 56V16H46C60 16 68 22 68 31C68 40 60 44 46 44H10M46 44L68 56" stroke="white" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-/* Eclipse "O" — the glowing circle that replaces the letter O in DOT */
-function EclipseO() {
-  return (
-    <span className="eclipse-o-wrapper">
-      <span className="eclipse-o">
-        <span className="eclipse-glow" />
-        <span className="eclipse-center" />
-      </span>
-    </span>
-  );
 }
 
 export default function WaitingListPage({ onUnlock }: WaitingListPageProps) {
@@ -76,8 +22,7 @@ export default function WaitingListPage({ onUnlock }: WaitingListPageProps) {
 
   // Animation phases
   const [phase, setPhase] = useState(0);
-  // phase 0: nothing visible
-  // phase 1: DOT STAR text appears (together, centered)
+  
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
     handleResize();
@@ -123,9 +68,9 @@ export default function WaitingListPage({ onUnlock }: WaitingListPageProps) {
   };
 
   return (
-    <AnimatePresence>
+    <AnimatePresence mode="wait">
       <motion.div
-        className="waitlist-page"
+        className="waitlist-page dark" // Forced Dark Class
         initial={{ opacity: 0 }}
         animate={{
           opacity: pageExiting ? 0 : 1,
@@ -136,108 +81,68 @@ export default function WaitingListPage({ onUnlock }: WaitingListPageProps) {
       >
         {/* Particle Background */}
         <ParticleBackground />
+        <MetallicGradient />
 
         {/* Subtle radial vignette */}
         <div className="waitlist-vignette" />
 
         {/* Main Content */}
-        <div className="waitlist-content">
+        <div className="waitlist-content text-[#FAFAF8]">
           {/* DOT · [LOGO] · STAR */}
-          <div className="waitlist-brand">
-            {/* DOT text — with eclipse O */}
+          <div className="waitlist-brand" style={{ gap: 'clamp(1rem, 3.5vw, 2.5rem)' }}>
             <motion.div
               className="waitlist-text-group waitlist-text-dot"
-              initial={{ opacity: 0 }}
-              animate={{
-                opacity: phase >= 1 ? 1 : 0,
-                x: phase >= 2 ? (isMobile ? '-26px' : '-56px') : '0px',
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ 
+                opacity: phase >= 1 ? 1 : 0, 
+                x: phase >= 2 ? (isMobile ? -24 : -60) : 0,
+                scale: phase >= 2 ? 0.82 : 1
               }}
-              transition={{
-                opacity: { duration: 1, ease: 'easeOut' },
-                x: { duration: 1.6, ease: [0.16, 1, 0.3, 1] },
-              }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+              style={{ zIndex: 10 }}
             >
-              <motion.span
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: phase >= 1 ? 1 : 0, y: phase >= 1 ? 0 : 20 }}
-                transition={{ duration: 0.7, delay: 0, ease: [0.16, 1, 0.3, 1] }}
-              >
-                <LetterD />
-              </motion.span>
-              <motion.span
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: phase >= 1 ? 1 : 0, y: phase >= 1 ? 0 : 20 }}
-                transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-              >
-                <EclipseO />
-              </motion.span>
-              <motion.span
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: phase >= 1 ? 1 : 0, y: phase >= 1 ? 0 : 20 }}
-                transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-              >
-                <LetterT />
-              </motion.span>
+              <div className="flex items-center h-[clamp(22px,4.2vw,54px)] gap-[0.4em] text-[#FAFAF8]">
+                <LetterD metallic={true} />
+                <MoonEclipseO />
+                <LetterT metallic={true} />
+              </div>
             </motion.div>
 
-            {/* 3D Logo — appears simultaneously with text split */}
+            {/* 3D Logo — centered between DOT and STAR */}
             <motion.div
               className="waitlist-logo-container"
-              initial={{ opacity: 0, scale: 0.72, rotateY: -90 }}
+              initial={{ opacity: 0, scale: 0.5, rotateY: -90 }}
               animate={{
                 opacity: phase >= 2 ? 1 : 0,
-                scale: phase >= 2 ? 1 : 0.72,
+                scale: phase >= 2 ? 1 : 0.5,
                 rotateY: phase >= 2 ? 0 : -90,
               }}
+              style={{ x: '-50%', y: '-50%' }}
               transition={{
-                duration: 1.05,
+                duration: 1.2,
                 ease: [0.22, 1, 0.36, 1],
               }}
             >
               <Logo3D className="waitlist-logo-3d" />
             </motion.div>
 
-            {/* STAR text */}
             <motion.div
               className="waitlist-text-group waitlist-text-star"
-              initial={{ opacity: 0 }}
-              animate={{
-                opacity: phase >= 1 ? 1 : 0,
-                x: phase >= 2 ? (isMobile ? '22px' : '28px') : '0px',
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ 
+                opacity: phase >= 1 ? 1 : 0, 
+                x: phase >= 2 ? (isMobile ? 24 : 60) : 0,
+                scale: phase >= 2 ? 0.82 : 1
               }}
-              transition={{
-                opacity: { duration: 1, ease: 'easeOut' },
-                x: { duration: 1.6, ease: [0.16, 1, 0.3, 1] },
-              }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+              style={{ zIndex: 10 }}
             >
-              <motion.span
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: phase >= 1 ? 1 : 0, y: phase >= 1 ? 0 : 20 }}
-                transition={{ duration: 0.7, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              >
-                <LetterS />
-              </motion.span>
-              <motion.span
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: phase >= 1 ? 1 : 0, y: phase >= 1 ? 0 : 20 }}
-                transition={{ duration: 0.7, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              >
-                <LetterT />
-              </motion.span>
-              <motion.span
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: phase >= 1 ? 1 : 0, y: phase >= 1 ? 0 : 20 }}
-                transition={{ duration: 0.7, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-              >
-                <LetterA />
-              </motion.span>
-              <motion.span
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: phase >= 1 ? 1 : 0, y: phase >= 1 ? 0 : 20 }}
-                transition={{ duration: 0.7, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              >
-                <LetterR />
-              </motion.span>
+              <div className="flex items-center h-[clamp(22px,4.2vw,54px)] gap-[0.4em] text-[#FAFAF8]">
+                <LetterS metallic={true} />
+                <LetterT metallic={true} />
+                <LetterA metallic={true} />
+                <LetterR metallic={true} />
+              </div>
             </motion.div>
           </div>
 

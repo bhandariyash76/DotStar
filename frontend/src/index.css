@@ -8,9 +8,34 @@
 /* ─── Base Reset ─────────────────────────────────────────────────────────── */
 
 :root {
+  --color-primary: #FAFAF8;
+  --color-secondary: #F0EEEB;
+  --color-surface: #FFFFFF;
   --color-accent: #D4642A;
-  --color-bg: #FAFAF8;
+  --color-accent-soft: #F0D9C8;
+  --color-accent-hover: #C0561F;
   --color-ink: #1A1A1A;
+  --color-ink-secondary: #6B6B6B;
+  --color-ink-muted: #9A9A9A;
+  --color-border: #E5E3DF;
+  --color-border-strong: #D1CFC9;
+
+  /* Legacy aliases for backward compatibility */
+  --color-bg: var(--color-primary);
+}
+
+.dark {
+  --color-primary: #0A0A0A;
+  --color-secondary: #141414;
+  --color-surface: #1A1A1A;
+  --color-accent: #E87A3F;
+  --color-accent-soft: #2D1D14;
+  --color-accent-hover: #F08D59;
+  --color-ink: #FAFAF8;
+  --color-ink-secondary: #A0A0A0;
+  --color-ink-muted: #6B6B6B;
+  --color-border: #2A2A2A;
+  --color-border-strong: #3A3A3A;
 }
 
 * {
@@ -44,21 +69,26 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #F0EEEB;
+  background: var(--color-secondary);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #D1CFC9;
+  background: var(--color-border-strong);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #B0AFA8;
+  background: var(--color-ink-muted);
 }
 
 /* ─── Typography ─────────────────────────────────────────────────────────── */
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   text-wrap: balance;
 }
 
@@ -79,7 +109,7 @@ p {
   opacity: 0;
   transform: translateY(24px);
   transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .animate-on-scroll.is-visible {
@@ -105,25 +135,15 @@ p {
 
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center justify-center px-8 py-3
-           bg-ink text-primary text-caption uppercase tracking-widest
-           transition-all duration-300 ease-smooth
-           hover:bg-accent hover:text-primary
-           focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2;
+    @apply inline-flex items-center justify-center px-8 py-3 bg-ink text-primary text-caption uppercase tracking-widest transition-all duration-300 ease-smooth hover:bg-accent hover:text-primary focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2;
   }
 
   .btn-outline {
-    @apply inline-flex items-center justify-center px-8 py-3
-           border border-ink text-ink text-caption uppercase tracking-widest
-           transition-all duration-300 ease-smooth
-           hover:bg-ink hover:text-primary
-           focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2;
+    @apply inline-flex items-center justify-center px-8 py-3 border border-ink text-ink text-caption uppercase tracking-widest transition-all duration-300 ease-smooth hover:bg-ink hover:text-primary focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2;
   }
 
   .btn-ghost {
-    @apply inline-flex items-center gap-2 text-caption uppercase tracking-widest
-           text-ink-secondary transition-colors duration-300
-           hover:text-accent;
+    @apply inline-flex items-center gap-2 text-caption uppercase tracking-widest text-ink-secondary transition-colors duration-300 hover:text-accent;
   }
 
   /* Divider */
@@ -145,8 +165,13 @@ p {
 }
 
 @keyframes marquee {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
 /* ─── Waiting List Page ──────────────────────────────────────────────────── */
@@ -156,11 +181,15 @@ p {
   inset: 0;
   width: 100vw;
   height: 100vh;
-  background: #000;
+  background: #0A0A0A;
+  /* Forced Dark */
   z-index: 9999;
   overflow-y: auto;
   overflow-x: hidden;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  transition: background-color 0.5s ease;
+  color: #FAFAF8;
+  /* Forced Light Text */
 }
 
 .waitlist-vignette {
@@ -168,7 +197,8 @@ p {
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  background: radial-gradient(ellipse at center, transparent 30%, rgba(0, 0, 0, 0.6) 100%);
+  background: radial-gradient(ellipse at center, transparent 35%, rgba(4, 4, 10, 0.65) 100%);
+  opacity: 1;
 }
 
 .waitlist-content {
@@ -203,7 +233,8 @@ p {
 }
 
 .waitlist-letter {
-  display: none; /* replaced by SVG letters */
+  display: none;
+  /* replaced by SVG letters */
 }
 
 .brand-svg-letter {
@@ -265,7 +296,9 @@ p {
 }
 
 @keyframes eclipse-pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     box-shadow:
       0 0 7px 2px rgba(255, 255, 255, 0.95),
       0 0 15px 5px rgba(255, 245, 185, 0.58),
@@ -273,6 +306,7 @@ p {
       0 0 42px 17px rgba(255, 255, 255, 0.12),
       inset 0 0 7px 2px rgba(255, 255, 255, 0.52);
   }
+
   50% {
     box-shadow:
       0 0 9px 3px rgba(255, 255, 255, 1),
@@ -283,18 +317,41 @@ p {
   }
 }
 
+@keyframes moon-pulse {
+
+  0%,
+  100% {
+    box-shadow:
+      0 0 6px 2px rgba(200, 220, 255, 0.9),
+      0 0 14px 5px rgba(180, 210, 255, 0.5),
+      0 0 28px 10px rgba(200, 220, 255, 0.22),
+      0 0 48px 18px rgba(180, 200, 255, 0.1),
+      inset 0 0 8px 2px rgba(200, 220, 255, 0.4);
+  }
+
+  50% {
+    box-shadow:
+      0 0 10px 3px rgba(210, 230, 255, 1),
+      0 0 22px 8px rgba(190, 215, 255, 0.65),
+      0 0 40px 15px rgba(200, 225, 255, 0.3),
+      0 0 65px 25px rgba(180, 205, 255, 0.14),
+      inset 0 0 12px 3px rgba(210, 230, 255, 0.55);
+  }
+}
+
 /* ─── 3D Logo Container ─────────────────────────────────────────────────── */
 
 .waitlist-logo-container {
   position: absolute;
-  width: clamp(80px, 11vw, 148px);
-  height: clamp(80px, 9.6vw, 124px);
+  top: 50%;
+  left: 52.5%;
+  width: clamp(100px, 14vw, 180px);
+  height: clamp(100px, 14vw, 180px);
   z-index: 20;
   will-change: transform, opacity;
   pointer-events: none;
   filter:
-    drop-shadow(0 0 8px rgba(255, 255, 255, 0.5))
-    drop-shadow(0 0 20px rgba(255, 255, 255, 0.16));
+    drop-shadow(0 0 12px rgba(255, 255, 255, 0.6)) drop-shadow(0 0 32px rgba(255, 255, 255, 0.22));
 }
 
 .waitlist-logo-3d {
@@ -311,8 +368,8 @@ p {
   font-weight: 300;
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.35);
-  margin-top: 0.5rem;
+  color: var(--color-ink-muted);
+  margin-top: 2rem;
   margin-bottom: 3rem;
 }
 
@@ -332,8 +389,8 @@ p {
   display: flex;
   gap: 0;
   width: 100%;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--color-secondary);
+  border: 1px solid var(--color-border);
   border-radius: 0;
   overflow: hidden;
   backdrop-filter: blur(20px);
@@ -342,8 +399,8 @@ p {
 }
 
 .waitlist-input-group:focus-within {
-  border-color: rgba(255, 255, 255, 0.2);
-  box-shadow: 0 0 40px rgba(255, 255, 255, 0.03);
+  border-color: var(--color-accent);
+  box-shadow: 0 0 40px var(--color-accent-soft);
 }
 
 .waitlist-email-input {
@@ -352,7 +409,7 @@ p {
   background: transparent;
   border: none;
   outline: none;
-  color: #ffffff;
+  color: var(--color-ink);
   font-family: 'Inter', sans-serif;
   font-size: 0.85rem;
   font-weight: 300;
@@ -360,7 +417,7 @@ p {
 }
 
 .waitlist-email-input::placeholder {
-  color: rgba(255, 255, 255, 0.25);
+  color: var(--color-ink-muted);
   letter-spacing: 0.1em;
   text-transform: uppercase;
   font-size: 0.75rem;
@@ -368,10 +425,10 @@ p {
 
 .waitlist-submit-btn {
   padding: 1rem 2rem;
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--color-border);
   border: none;
-  border-left: 1px solid rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.7);
+  border-left: 1px solid var(--color-border-strong);
+  color: var(--color-ink-secondary);
   font-family: 'Inter', sans-serif;
   font-size: 0.7rem;
   font-weight: 500;
@@ -383,8 +440,8 @@ p {
 }
 
 .waitlist-submit-btn:hover {
-  background: rgba(255, 255, 255, 0.15);
-  color: #ffffff;
+  background: var(--color-border-strong);
+  color: var(--color-ink);
 }
 
 /* ─── Success State ──────────────────────────────────────────────────────── */
@@ -394,9 +451,9 @@ p {
   align-items: center;
   gap: 0.75rem;
   padding: 1rem 1.5rem;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.8);
+  background: var(--color-accent-soft);
+  border: 1px solid var(--color-accent);
+  color: var(--color-ink);
   font-size: 0.85rem;
   font-weight: 300;
   letter-spacing: 0.05em;
@@ -419,7 +476,7 @@ p {
   font-weight: 400;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.25);
+  color: var(--color-ink-muted);
   margin-bottom: 1rem;
 }
 
@@ -434,13 +491,13 @@ p {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  border-bottom: 1px solid var(--color-border);
   padding-bottom: 0.5rem;
   transition: border-color 0.3s ease;
 }
 
 .waitlist-access-input-wrapper:focus-within {
-  border-color: rgba(255, 255, 255, 0.4);
+  border-color: var(--color-ink);
 }
 
 .waitlist-access-input-wrapper.success {
@@ -451,7 +508,7 @@ p {
   background: transparent;
   border: none;
   outline: none;
-  color: #ffffff;
+  color: var(--color-ink);
   font-family: 'Inter', sans-serif;
   font-size: 0.8rem;
   font-weight: 300;
@@ -462,7 +519,7 @@ p {
 }
 
 .waitlist-access-input::placeholder {
-  color: rgba(255, 255, 255, 0.2);
+  color: var(--color-ink-muted);
   letter-spacing: 0.2em;
   font-size: 0.7rem;
 }
@@ -470,7 +527,7 @@ p {
 .waitlist-access-btn {
   background: none;
   border: none;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--color-ink-secondary);
   cursor: pointer;
   padding: 0.25rem;
   display: flex;
@@ -480,7 +537,7 @@ p {
 }
 
 .waitlist-access-btn:hover {
-  color: #ffffff;
+  color: var(--color-ink);
   transform: translateX(3px);
 }
 
@@ -501,13 +558,30 @@ p {
 /* ─── Shake Animation ────────────────────────────────────────────────────── */
 
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
-  20%, 40%, 60%, 80% { transform: translateX(4px); }
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateX(-4px);
+  }
+
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translateX(4px);
+  }
 }
 
 .shake {
-  animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+  animation: shake 0.5s cubic-bezier(.36, .07, .19, .97) both;
   border-color: rgba(248, 113, 113, 0.5) !important;
 }
 
@@ -525,7 +599,7 @@ p {
   font-weight: 400;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.12);
+  color: var(--color-ink-muted);
 }
 
 /* ─── Responsive ─────────────────────────────────────────────────────────── */

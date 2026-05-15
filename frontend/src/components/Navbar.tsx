@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { siteConfig } from "@/lib/data";
 import DotStarLogo from './DotStarLogo';
+import BrandText from './BrandText';
+import ThemeToggle from './ThemeToggle';
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -50,10 +52,11 @@ export default function Navbar() {
             {/* Logo */}
             <Link
               to="/"
-              className="relative md:-ml-8"
+              className="flex items-center gap-3 md:-ml-4 group"
               id="nav-logo"
             >
-              <DotStarLogo className="w-12 h-12" />
+              <DotStarLogo className="w-10 h-10 md:w-12 md:h-12 text-ink transition-transform duration-300 group-hover:scale-110" />
+              <BrandText size="md" className="text-ink hidden sm:flex" />
             </Link>
 
             {/* Desktop Nav */}
@@ -73,6 +76,8 @@ export default function Navbar() {
 
             {/* Right Icons */}
             <div className="flex items-center gap-5">
+              <ThemeToggle className="hidden sm:flex" />
+              
               {/* Search Icon */}
               <button
                 className="text-ink-secondary hover:text-ink transition-colors duration-300"
@@ -103,23 +108,26 @@ export default function Navbar() {
               </Link>
 
               {/* Mobile Menu Toggle */}
-              <button
-                onClick={() => setMobileOpen(!mobileOpen)}
-                className="md:hidden text-ink"
-                aria-label="Toggle menu"
-                id="nav-menu-toggle"
-              >
-                <div className="w-6 flex flex-col gap-1.5">
-                  <span className={cn(
-                    "block h-px bg-ink transition-all duration-300 origin-center",
-                    mobileOpen && "rotate-45 translate-y-[3.5px]"
-                  )} />
-                  <span className={cn(
-                    "block h-px bg-ink transition-all duration-300",
-                    mobileOpen && "-rotate-45 -translate-y-[3.5px]"
-                  )} />
-                </div>
-              </button>
+              <div className="flex items-center gap-2 md:hidden">
+                <ThemeToggle />
+                <button
+                  onClick={() => setMobileOpen(!mobileOpen)}
+                  className="text-ink p-2"
+                  aria-label="Toggle menu"
+                  id="nav-menu-toggle"
+                >
+                  <div className="w-6 flex flex-col gap-1.5">
+                    <span className={cn(
+                      "block h-px bg-ink transition-all duration-300 origin-center",
+                      mobileOpen && "rotate-45 translate-y-[3.5px]"
+                    )} />
+                    <span className={cn(
+                      "block h-px bg-ink transition-all duration-300",
+                      mobileOpen && "-rotate-45 -translate-y-[3.5px]"
+                    )} />
+                  </div>
+                </button>
+              </div>
             </div>
           </div>
         </div>
