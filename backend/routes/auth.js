@@ -3,7 +3,8 @@ import {
   register,
   login,
   logout,
-  getMe
+  getMe,
+  updateMe
 } from '../controllers/auth.js';
 
 const router = express.Router();
@@ -14,5 +15,6 @@ router.post('/register', register);
 router.post('/login', login);
 router.get('/logout', logout);
 router.get('/me', protect, getMe);
+router.put('/me', protect, updateMe);
 
 export default router;

@@ -7,10 +7,14 @@ import { siteConfig } from "@/lib/data";
 import DotStarLogo from './DotStarLogo';
 import BrandText from './BrandText';
 import ThemeToggle from './ThemeToggle';
+import { useAuth } from "@/lib/AuthContext";
+import { useCart } from "@/lib/CartContext";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { user } = useAuth();
+  const { itemCount } = useCart();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -70,6 +74,16 @@ export default function Navbar() {
                   <span className="absolute -bottom-1 left-0 w-0 h-px bg-ink transition-all duration-300 group-hover:w-full" />
                 </Link>
               ))}
+              {user?.role === "admin" && (
+                <Link
+                  to="/admin"
+                  className="nav-link text-caption uppercase tracking-widest transition-colors duration-300 relative group"
+                  id="nav-admin"
+                >
+                  Admin
+                  <span className="absolute -bottom-1 left-0 w-0 h-px bg-ink transition-all duration-300 group-hover:w-full" />
+                </Link>
+              )}
             </div>
 
             {/* Right Icons */}
@@ -88,6 +102,18 @@ export default function Navbar() {
                 </svg>
               </button>
 
+              <Link
+                to={user ? "/account" : "/login"}
+                className="nav-icon transition-colors duration-300"
+                aria-label={user ? "Account" : "Login"}
+                id="nav-account"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M20 21a8 8 0 0 0-16 0" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
+              </Link>
+
               {/* Cart Icon */}
               <Link
                 to="/cart"
@@ -101,7 +127,7 @@ export default function Navbar() {
                   <path d="M16 10a4 4 0 0 1-8 0" />
                 </svg>
                 <span className="absolute -top-1 -right-1.5 w-4 h-4 bg-accent text-primary text-[10px] font-medium rounded-full flex items-center justify-center">
-                  0
+                  {itemCount}
                 </span>
               </Link>
 
@@ -152,11 +178,32 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
+          <Link
+            to={user ? "/account" : "/login"}
+            onClick={() => setMobileOpen(false)}
+            className="text-title font-light text-ink-secondary hover:text-accent transition-colors duration-300"
+          >
+            {user ? "Account" : "Login"}
+          </Link>
+          <Link
+            to="/cart"
+            onClick={() => setMobileOpen(false)}
+            className="text-title font-light text-ink-secondary hover:text-accent transition-colors duration-300"
+          >
+            Cart ({itemCount})
+          </Link>
+          {user?.role === "admin" && (
+            <Link
+              to="/admin"
+              onClick={() => setMobileOpen(false)}
+              className="text-title font-light text-ink-secondary hover:text-accent transition-colors duration-300"
+            >
+              Admin
+            </Link>
+          )}
         </div>
       </div>
     </>
   );
 }
-
-
 

@@ -39,6 +39,7 @@ const productSchema = new mongoose.Schema({
     required: false // Optional for now
   },
   categorySlug: String,
+  categoryName: String,
   sizes: [String],
   colors: [{
     name: String,
@@ -57,10 +58,32 @@ const productSchema = new mongoose.Schema({
     type: Boolean,
     default: true
   },
-  createdAt: {
-    type: Date,
-    default: Date.now
+  isNew: {
+    type: Boolean,
+    default: true
+  },
+}, {
+  timestamps: true
+});
+
+productSchema.pre('save', function(next) {
+  if (!this.slug && this.name) {
+    this.slug = this.name
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '');
   }
+
+  if (!this.categorySlug && this.categoryName) {
+    this.categorySlug = this.categoryName
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '');
+  }
+
+  next();
 });
 
 export default mongoose.model('Product', productSchema);

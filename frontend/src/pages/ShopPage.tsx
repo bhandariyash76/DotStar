@@ -3,18 +3,19 @@ import { useSearchParams } from "react-router-dom";
 import PageLayout from "@/components/PageLayout";
 import ShopHeader from "@/components/ShopHeader";
 import ProductGrid from "@/components/ProductGrid";
-import { products, getUniqueCategories } from "@/lib/data";
 import { cn } from "@/lib/utils";
+import { useCatalog } from "@/lib/CatalogContext";
 
 export default function ShopPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const categorySlug = searchParams.get("category");
+  const { products, getUniqueCategories } = useCatalog();
   const categories = getUniqueCategories();
 
   const filtered = useMemo(() => {
     if (!categorySlug) return products;
     return products.filter((p) => p.categorySlug === categorySlug);
-  }, [categorySlug]);
+  }, [categorySlug, products]);
 
   const activeCategory = categories.find((c) => c.slug === categorySlug);
 

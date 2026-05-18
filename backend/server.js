@@ -41,13 +41,17 @@ app.use(cors({
 
 // Route files
 import authRoutes from './routes/auth.js';
-// import productRoutes from './routes/products.js';
-// import orderRoutes from './routes/orders.js';
+import cartRoutes from './routes/cart.js';
+import orderRoutes from './routes/orders.js';
+import productRoutes from './routes/products.js';
+import discountRoutes from './routes/discounts.js';
 
 // Mount routers
 app.use('/api/v1/auth', authRoutes);
-// app.use('/api/v1/products', productRoutes);
-// app.use('/api/v1/orders', orderRoutes);
+app.use('/api/v1/cart', cartRoutes);
+app.use('/api/v1/orders', orderRoutes);
+app.use('/api/v1/products', productRoutes);
+app.use('/api/v1/discounts', discountRoutes);
 
 // Base route
 app.get('/', (req, res) => {

@@ -1,10 +1,11 @@
 import PageLayout from "@/components/PageLayout";
 import ShopHeader from "@/components/ShopHeader";
 import ProductGrid from "@/components/ProductGrid";
-import { getNewProducts } from "@/lib/data";
+import { useCatalog } from "@/lib/CatalogContext";
 
 export default function NewArrivalsPage() {
-  const newProducts = getNewProducts();
+  const { products } = useCatalog();
+  const newProducts = products.filter((product) => product.isNew);
 
   return (
     <PageLayout>

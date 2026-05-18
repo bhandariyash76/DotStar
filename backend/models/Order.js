@@ -14,9 +14,8 @@ const orderSchema = new mongoose.Schema({
       price: { type: Number, required: true },
       size: { type: String, required: true },
       color: { type: Object, required: true },
-      product: {
-        type: mongoose.Schema.ObjectId,
-        ref: 'Product',
+      productId: {
+        type: String,
         required: true
       }
     }
@@ -42,6 +41,15 @@ const orderSchema = new mongoose.Schema({
     required: true,
     default: 0.0
   },
+  discount: {
+    id: String,
+    name: String,
+    code: String,
+    scope: String,
+    type: String,
+    value: Number,
+    amount: Number
+  },
   totalPrice: {
     type: Number,
     required: true,
@@ -65,13 +73,11 @@ const orderSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled'],
+    enum: ['pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled', 'returned'],
     default: 'pending'
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
   }
+}, {
+  timestamps: true
 });
 
 export default mongoose.model('Order', orderSchema);

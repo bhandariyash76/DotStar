@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const BANNER_COLLECTIONS = [
   {
@@ -39,18 +40,52 @@ const BANNER_COLLECTIONS = [
 
 export default function CollectionBannerSlider() {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const touchStartX = useRef<number | null>(null);
+
+  const goToPrevious = useCallback(() => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === 0 ? BANNER_COLLECTIONS.length - 1 : prevIndex - 1
+    );
+  }, []);
+
+  const goToNext = useCallback(() => {
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % BANNER_COLLECTIONS.length);
+  }, []);
+
+  const handleTouchEnd = (x: number) => {
+    if (touchStartX.current === null) return;
+
+    const distance = touchStartX.current - x;
+    touchStartX.current = null;
+
+    if (Math.abs(distance) < 40) return;
+    if (distance > 0) {
+      goToNext();
+    } else {
+      goToPrevious();
+    }
+  };
 
   // Auto-slide effect
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % BANNER_COLLECTIONS.length);
+      goToNext();
     }, 5000); // Change slide every 5 seconds
 
     return () => clearInterval(timer);
-  }, []);
+  }, [goToNext]);
 
   return (
-    <section className="relative w-full h-[60vh] md:h-[80vh] overflow-hidden bg-ink" id="collection-banner-slider">
+    <section
+      className="relative w-full h-[60vh] md:h-[80vh] overflow-hidden bg-ink touch-pan-y"
+      id="collection-banner-slider"
+      onTouchStart={(event) => {
+        touchStartX.current = event.touches[0]?.clientX ?? null;
+      }}
+      onTouchEnd={(event) => {
+        handleTouchEnd(event.changedTouches[0]?.clientX ?? 0);
+      }}
+    >
       {/* Slides Container */}
       <div className="absolute inset-0 w-full h-full">
         {BANNER_COLLECTIONS.map((banner, index) => (
@@ -98,6 +133,24 @@ export default function CollectionBannerSlider() {
           </div>
         ))}
       </div>
+
+      <button
+        type="button"
+        onClick={goToPrevious}
+        aria-label="Previous collection"
+        className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-30 w-9 h-9 md:w-11 md:h-11 flex items-center justify-center rounded-full border border-white/30 bg-black/20 text-white backdrop-blur-md transition-colors hover:bg-white hover:text-ink"
+      >
+        <ChevronLeft className="w-4 h-4 md:w-5 md:h-5" />
+      </button>
+
+      <button
+        type="button"
+        onClick={goToNext}
+        aria-label="Next collection"
+        className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-30 w-9 h-9 md:w-11 md:h-11 flex items-center justify-center rounded-full border border-white/30 bg-black/20 text-white backdrop-blur-md transition-colors hover:bg-white hover:text-ink"
+      >
+        <ChevronRight className="w-4 h-4 md:w-5 md:h-5" />
+      </button>
 
       {/* Navigation Dots */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-30">

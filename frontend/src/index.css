@@ -200,6 +200,15 @@ p {
   .dark .site-nav .nav-icon:hover {
     color: #fafaf8;
   }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 /* ─── Marquee ────────────────────────────────────────────────────────────── */
@@ -212,6 +221,14 @@ p {
 
 .marquee-track:hover {
   animation-play-state: paused;
+}
+
+.marquee-track.is-paused {
+  animation-play-state: paused;
+}
+
+.latest-drop-mobile-track {
+  animation-duration: 24s;
 }
 
 @keyframes marquee {

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import FeaturedProducts from './components/FeaturedProducts';
@@ -13,12 +13,29 @@ import ShopPage from './pages/ShopPage';
 import CollectionsPage from './pages/CollectionsPage';
 import CollectionPage from './pages/CollectionPage';
 import NewArrivalsPage from './pages/NewArrivalsPage';
-import { products } from './lib/data';
+import LoginPage from './pages/LoginPage';
+import AccountPage from './pages/AccountPage';
+import CartPage from './pages/CartPage';
+import AdminPage from './pages/AdminPage';
 import { ThemeProvider } from './lib/ThemeContext';
+import { AuthProvider } from './lib/AuthContext';
+import { CartProvider } from './lib/CartContext';
+import { CatalogProvider, useCatalog } from './lib/CatalogContext';
 
 const ACCESS_STORAGE_KEY = 'dotstar_access';
 
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, [pathname]);
+
+  return null;
+}
+
 function Home() {
+  const { products } = useCatalog();
   const newArrivals = products.filter((p) => p.isNew);
 
   return (
@@ -78,16 +95,27 @@ function App() {
         <WaitingListPage onUnlock={handleUnlock} />
       ) : (
         <Router>
-          <div className="font-sans bg-primary text-ink antialiased min-h-screen transition-colors duration-500">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/shop" element={<ShopPage />} />
-              <Route path="/products/:slug" element={<ProductPage />} />
-              <Route path="/collections" element={<CollectionsPage />} />
-              <Route path="/collections/:slug" element={<CollectionPage />} />
-              <Route path="/new" element={<NewArrivalsPage />} />
-            </Routes>
-          </div>
+          <AuthProvider>
+            <CatalogProvider>
+              <CartProvider>
+                <div className="font-sans bg-primary text-ink antialiased min-h-screen transition-colors duration-500">
+                  <ScrollToTop />
+                  <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/shop" element={<ShopPage />} />
+                    <Route path="/products/:slug" element={<ProductPage />} />
+                    <Route path="/collections" element={<CollectionsPage />} />
+                    <Route path="/collections/:slug" element={<CollectionPage />} />
+                    <Route path="/new" element={<NewArrivalsPage />} />
+                    <Route path="/login" element={<LoginPage />} />
+                    <Route path="/account" element={<AccountPage />} />
+                    <Route path="/cart" element={<CartPage />} />
+                    <Route path="/admin" element={<AdminPage />} />
+                  </Routes>
+                </div>
+              </CartProvider>
+            </CatalogProvider>
+          </AuthProvider>
         </Router>
       )}
     </ThemeProvider>

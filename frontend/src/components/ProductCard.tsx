@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { Product } from "@/types/models";
 import { formatPrice, cn, staggerDelay } from "@/lib/utils";
 import { Bookmark, Plus } from "lucide-react";
+import { useCart } from "@/lib/CartContext";
 
 interface ProductCardProps {
   product: Product;
@@ -14,6 +15,7 @@ interface ProductCardProps {
 export default function ProductCard({ product, index = 0 }: ProductCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
+  const { addItem } = useCart();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -106,7 +108,7 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
             className="mt-0.5 w-6 h-6 flex items-center justify-center text-ink-secondary hover:text-ink transition-colors"
             onClick={(e) => {
               e.preventDefault();
-              // quick add logic
+              addItem(product, product.sizes[0], product.colors[0]);
             }}
           >
             <Plus className="w-4 h-4" />

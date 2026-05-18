@@ -55,7 +55,35 @@ export const getMe = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({
     success: true,
-    data: user
+    user: formatUser(user)
+  });
+});
+
+// @desc      Update current user profile
+// @route     PUT /api/v1/auth/me
+// @access    Private
+export const updateMe = asyncHandler(async (req, res, next) => {
+  const fieldsToUpdate = {
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    email: req.body.email,
+    addresses: req.body.addresses
+  };
+
+  Object.keys(fieldsToUpdate).forEach((key) => {
+    if (fieldsToUpdate[key] === undefined) {
+      delete fieldsToUpdate[key];
+    }
+  });
+
+  const user = await User.findByIdAndUpdate(req.user.id, fieldsToUpdate, {
+    new: true,
+    runValidators: true
+  });
+
+  res.status(200).json({
+    success: true,
+    user: formatUser(user)
   });
 });
 
@@ -83,12 +111,10 @@ const sendTokenResponse = (user, statusCode, res) => {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000
     ),
-    httpOnly: true
+    httpOnly: true,
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    secure: process.env.NODE_ENV === 'production'
   };
-
-  if (process.env.NODE_ENV === 'production') {
-    options.secure = true;
-  }
 
   res
     .status(statusCode)
@@ -96,13 +122,17 @@ const sendTokenResponse = (user, statusCode, res) => {
     .json({
       success: true,
       token,
-      user: {
-        id: user._id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        role: user.role,
-        avatar: user.avatar
-      }
+      user: formatUser(user)
     });
 };
+
+const formatUser = (user) => ({
+  id: user._id,
+  firstName: user.firstName,
+  lastName: user.lastName,
+  email: user.email,
+  role: user.role,
+  avatar: user.avatar,
+  addresses: user.addresses || [],
+  createdAt: user.createdAt
+});

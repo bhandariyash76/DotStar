@@ -30,6 +30,20 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: 'no-photo.jpg'
   },
+  addresses: [
+    {
+      firstName: { type: String, required: true },
+      lastName: { type: String, required: true },
+      street: { type: String, required: true },
+      apartment: { type: String },
+      city: { type: String, required: true },
+      state: { type: String, required: true },
+      zip: { type: String, required: true },
+      country: { type: String, required: true, default: 'India' },
+      phone: { type: String, required: true },
+      isDefault: { type: Boolean, default: false }
+    }
+  ],
   role: {
     type: String,
     enum: ['user', 'admin'],

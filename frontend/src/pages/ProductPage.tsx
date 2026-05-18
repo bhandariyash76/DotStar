@@ -5,18 +5,21 @@ import PageLayout from "@/components/PageLayout";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import ProductGallery from "@/components/ProductGallery";
 import ProductGrid from "@/components/ProductGrid";
-import { getProductBySlug, getRelatedProducts } from "@/lib/data";
 import { formatPrice, cn } from "@/lib/utils";
 import type { ProductColor, ProductSize } from "@/types/models";
+import { useCart } from "@/lib/CartContext";
+import { useCatalog } from "@/lib/CatalogContext";
 
 export default function ProductPage() {
   const { slug } = useParams<{ slug: string }>();
+  const { getProductBySlug, getRelatedProducts } = useCatalog();
   const product = slug ? getProductBySlug(slug) : undefined;
 
   const [selectedSize, setSelectedSize] = useState<ProductSize | null>(null);
   const [selectedColor, setSelectedColor] = useState<ProductColor | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
+  const { addItem } = useCart();
 
   if (!product) {
     return (
@@ -42,6 +45,7 @@ export default function ProductPage() {
   const size = selectedSize ?? product.sizes[0];
 
   const handleAddToBag = () => {
+    addItem(product, size, color, quantity);
     setAdded(true);
     setTimeout(() => setAdded(false), 2500);
   };
