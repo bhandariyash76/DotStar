@@ -2,15 +2,18 @@ import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
-
 import FeaturedProducts from './components/FeaturedProducts';
 import Newsletter from './components/Newsletter';
 import Footer from './components/Footer';
 import WaitingListPage from './components/WaitingListPage';
 import LatestDropSlider from './components/LatestDropSlider';
 import CollectionBannerSlider from './components/CollectionBannerSlider';
+import ProductPage from './pages/ProductPage';
+import ShopPage from './pages/ShopPage';
+import CollectionsPage from './pages/CollectionsPage';
+import CollectionPage from './pages/CollectionPage';
+import NewArrivalsPage from './pages/NewArrivalsPage';
 import { products } from './lib/data';
-
 import { ThemeProvider } from './lib/ThemeContext';
 
 const ACCESS_STORAGE_KEY = 'dotstar_access';
@@ -78,6 +81,11 @@ function App() {
           <div className="font-sans bg-primary text-ink antialiased min-h-screen transition-colors duration-500">
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/shop" element={<ShopPage />} />
+              <Route path="/products/:slug" element={<ProductPage />} />
+              <Route path="/collections" element={<CollectionsPage />} />
+              <Route path="/collections/:slug" element={<CollectionPage />} />
+              <Route path="/new" element={<NewArrivalsPage />} />
             </Routes>
           </div>
         </Router>

@@ -68,7 +68,6 @@ function Scene() {
 }
 
 function ExtrudedStar({ color, emissiveIntensity }: { color: string, emissiveIntensity: number }) {
-  const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
   const starGeometry = useMemo(() => {
     const shape = new THREE.Shape();
     const s = 1.4;

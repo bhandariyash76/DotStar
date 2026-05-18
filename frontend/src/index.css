@@ -150,6 +150,56 @@ p {
   .divider {
     @apply w-full h-px bg-border;
   }
+
+  /* Navbar — always readable on light/dark page backgrounds */
+  .site-nav {
+    background-color: color-mix(in srgb, var(--color-primary) 95%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--color-border);
+    color: #1a1a1a;
+  }
+
+  .dark .site-nav {
+    color: #fafaf8;
+  }
+
+  .site-nav .nav-brand,
+  .site-nav .nav-brand svg {
+    color: inherit;
+  }
+
+  .site-nav .nav-link {
+    color: #4a4a4a;
+  }
+
+  .site-nav .nav-link:hover {
+    color: #1a1a1a;
+  }
+
+  .dark .site-nav .nav-link {
+    color: #a0a0a0;
+  }
+
+  .dark .site-nav .nav-link:hover {
+    color: #fafaf8;
+  }
+
+  .site-nav .nav-icon {
+    color: #4a4a4a;
+  }
+
+  .site-nav .nav-icon:hover {
+    color: #1a1a1a;
+  }
+
+  .dark .site-nav .nav-icon {
+    color: #a0a0a0;
+  }
+
+  .dark .site-nav .nav-icon:hover {
+    color: #fafaf8;
+  }
 }
 
 /* ─── Marquee ────────────────────────────────────────────────────────────── */

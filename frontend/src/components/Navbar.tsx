@@ -38,13 +38,11 @@ export default function Navbar() {
         </div>
       )}
 
-      {/* Main Nav */}
+      {/* Main Nav — solid surface so brand/links never fade on white pages */}
       <nav
         className={cn(
-          "sticky top-0 z-50 transition-all duration-500 ease-smooth",
-          scrolled
-            ? "bg-primary/95 backdrop-blur-md border-b border-border shadow-sm"
-            : "bg-transparent"
+          "site-nav sticky top-0 z-50 transition-shadow duration-500 ease-smooth",
+          scrolled && "shadow-sm"
         )}
       >
         <div className="max-w-[1440px] mx-auto px-6 md:px-10">
@@ -52,11 +50,11 @@ export default function Navbar() {
             {/* Logo */}
             <Link
               to="/"
-              className="flex items-center gap-3 md:-ml-4 group"
+              className="nav-brand flex items-center gap-2.5 md:-ml-4 group"
               id="nav-logo"
             >
-              <DotStarLogo className="w-10 h-10 md:w-12 md:h-12 text-ink transition-transform duration-300 group-hover:scale-110" />
-              <BrandText size="md" className="text-ink hidden sm:flex" />
+              <DotStarLogo className="w-7 h-auto md:w-8 transition-transform duration-300 group-hover:scale-110" />
+              <BrandText size="sm" className="hidden sm:flex shrink-0 !text-inherit" />
             </Link>
 
             {/* Desktop Nav */}
@@ -65,7 +63,7 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   to={link.href}
-                  className="text-caption uppercase tracking-widest text-ink-secondary hover:text-ink transition-colors duration-300 relative group"
+                  className="nav-link text-caption uppercase tracking-widest transition-colors duration-300 relative group"
                   id={`nav-${link.label.toLowerCase().replace(/\s/g, "-")}`}
                 >
                   {link.label}
@@ -80,7 +78,7 @@ export default function Navbar() {
               
               {/* Search Icon */}
               <button
-                className="text-ink-secondary hover:text-ink transition-colors duration-300"
+                className="nav-icon transition-colors duration-300"
                 aria-label="Search"
                 id="nav-search"
               >
@@ -93,7 +91,7 @@ export default function Navbar() {
               {/* Cart Icon */}
               <Link
                 to="/cart"
-                className="text-ink-secondary hover:text-ink transition-colors duration-300 relative"
+                className="nav-icon transition-colors duration-300 relative"
                 aria-label="Cart"
                 id="nav-cart"
               >
@@ -112,17 +110,17 @@ export default function Navbar() {
                 <ThemeToggle />
                 <button
                   onClick={() => setMobileOpen(!mobileOpen)}
-                  className="text-ink p-2"
+                  className="nav-icon p-2"
                   aria-label="Toggle menu"
                   id="nav-menu-toggle"
                 >
                   <div className="w-6 flex flex-col gap-1.5">
                     <span className={cn(
-                      "block h-px bg-ink transition-all duration-300 origin-center",
+                      "block h-px bg-current transition-all duration-300 origin-center",
                       mobileOpen && "rotate-45 translate-y-[3.5px]"
                     )} />
                     <span className={cn(
-                      "block h-px bg-ink transition-all duration-300",
+                      "block h-px bg-current transition-all duration-300",
                       mobileOpen && "-rotate-45 -translate-y-[3.5px]"
                     )} />
                   </div>

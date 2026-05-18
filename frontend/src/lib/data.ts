@@ -318,3 +318,49 @@ export const siteConfig: SiteConfig = {
   ],
   announcementBar: "Free shipping on orders above ₹2,999 — Use code STAR10 for 10% off",
 };
+
+// ─── Data Helpers ───────────────────────────────────────────────────────────
+
+export function getProductBySlug(slug: string): Product | undefined {
+  return products.find((p) => p.slug === slug);
+}
+
+export function getProductsByCategorySlug(categorySlug: string): Product[] {
+  return products.filter((p) => p.categorySlug === categorySlug);
+}
+
+export function getCollectionBySlug(slug: string): Collection | undefined {
+  return collections.find((c) => c.slug === slug);
+}
+
+export function getProductsForCollection(collection: Collection): Product[] {
+  return collection.productIds
+    .map((id) => products.find((p) => p.id === id))
+    .filter((p): p is Product => p !== undefined);
+}
+
+export function getRelatedProducts(product: Product, limit = 4): Product[] {
+  return products
+    .filter(
+      (p) =>
+        p.id !== product.id &&
+        (p.categorySlug === product.categorySlug ||
+          p.tags.some((t) => product.tags.includes(t)))
+    )
+    .slice(0, limit);
+}
+
+export function getNewProducts(): Product[] {
+  return products.filter((p) => p.isNew);
+}
+
+export function getUniqueCategories(): { name: string; slug: string }[] {
+  const seen = new Set<string>();
+  return products.reduce<{ name: string; slug: string }[]>((acc, p) => {
+    if (!seen.has(p.categorySlug)) {
+      seen.add(p.categorySlug);
+      acc.push({ name: p.category, slug: p.categorySlug });
+    }
+    return acc;
+  }, []);
+}

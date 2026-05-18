@@ -30,7 +30,7 @@ interface BrandTextProps {
 
 export function LetterD({ metallic = false }: { metallic?: boolean }) {
   return (
-    <svg className="h-full w-auto" viewBox="0 0 78 62" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <svg className="h-full w-auto shrink-0 text-inherit" viewBox="0 0 78 62" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <path d="M8 16H44C60 16 70 27 70 39C70 51 60 56 44 56H8" stroke={metallic ? "url(#metal-grad)" : "currentColor"} strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
@@ -38,7 +38,7 @@ export function LetterD({ metallic = false }: { metallic?: boolean }) {
 
 export function LetterT({ metallic = false }: { metallic?: boolean }) {
   return (
-    <svg className="h-full w-auto" viewBox="0 0 66 62" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <svg className="h-full w-auto shrink-0 text-inherit" viewBox="0 0 66 62" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <path d="M6 16H60M33 16V56" stroke={metallic ? "url(#metal-grad)" : "currentColor"} strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
@@ -46,7 +46,7 @@ export function LetterT({ metallic = false }: { metallic?: boolean }) {
 
 export function LetterS({ metallic = false }: { metallic?: boolean }) {
   return (
-    <svg className="h-full w-auto" viewBox="0 0 72 62" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <svg className="h-full w-auto shrink-0 text-inherit" viewBox="0 0 72 62" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <path d="M62 16H22C13 16 8 21 8 28C8 35 13 39 22 39H50C59 39 64 43 64 50C64 55 59 56 50 56H10" stroke={metallic ? "url(#metal-grad)" : "currentColor"} strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
@@ -54,7 +54,7 @@ export function LetterS({ metallic = false }: { metallic?: boolean }) {
 
 export function LetterA({ metallic = false }: { metallic?: boolean }) {
   return (
-    <svg className="h-full w-auto" viewBox="0 0 72 62" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <svg className="h-full w-auto shrink-0 text-inherit" viewBox="0 0 72 62" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <path d="M8 56L31 18C34 13 38 13 41 18L64 56" stroke={metallic ? "url(#metal-grad)" : "currentColor"} strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
@@ -62,7 +62,7 @@ export function LetterA({ metallic = false }: { metallic?: boolean }) {
 
 export function LetterR({ metallic = false }: { metallic?: boolean }) {
   return (
-    <svg className="h-full w-auto" viewBox="0 0 76 62" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <svg className="h-full w-auto shrink-0 text-inherit" viewBox="0 0 76 62" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <path d="M10 56V16H46C60 16 68 22 68 31C68 40 60 44 46 44H10M46 44L68 56" stroke={metallic ? "url(#metal-grad)" : "currentColor"} strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
@@ -70,9 +70,8 @@ export function LetterR({ metallic = false }: { metallic?: boolean }) {
 
 export function EclipseO() {
   return (
-    <span className="relative flex items-center justify-center h-[120%] aspect-square mx-[2px]">
-      <span className="absolute inset-[5%] rounded-full border-[2px] border-ink opacity-90 shadow-[0_0_10px_rgba(255,255,255,0.5)] dark:shadow-[0_0_15px_rgba(255,255,255,0.2)]" />
-      <span className="absolute w-[80%] h-[80%] rounded-full bg-primary" />
+    <span className="relative inline-flex items-center justify-center h-[1.05em] w-[1.05em] mx-[0.06em] shrink-0">
+      <span className="absolute inset-0 rounded-full border-[1.5px] md:border-[2px] border-current" />
     </span>
   );
 }
@@ -142,13 +141,13 @@ export function MoonEclipseO() {
 
 export default function BrandText({ className, size = 'md' }: BrandTextProps) {
   const sizeClasses = {
-    sm: "h-3 md:h-4 gap-1",
+    sm: "h-4 md:h-5 gap-0.5",
     md: "h-5 md:h-8 gap-1.5",
     lg: "h-8 md:h-12 gap-2"
   };
 
   return (
-    <div className={cn("flex items-center", sizeClasses[size], className)}>
+    <section className={cn("flex items-center", sizeClasses[size], className)}>
       <div className="flex items-center h-full gap-[0.1em]">
         <LetterD />
         <EclipseO />
@@ -160,6 +159,6 @@ export default function BrandText({ className, size = 'md' }: BrandTextProps) {
         <LetterA />
         <LetterR />
       </div>
-    </div>
+    </section>
   );
 }
