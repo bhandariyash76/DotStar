@@ -26,6 +26,11 @@ const formatOrder = (order) => ({
   shippingAddress: order.shippingAddress,
   isPaid: order.isPaid,
   isDelivered: order.isDelivered,
+  returnAction: order.returnAction,
+  returnStatus: order.returnStatus,
+  returnReason: order.returnReason,
+  returnComments: order.returnComments,
+  returnedAt: order.returnedAt,
   createdAt: order.createdAt,
   updatedAt: order.updatedAt
 });
@@ -61,10 +66,11 @@ export const getOrders = asyncHandler(async (req, res) => {
 // @route     PUT /api/v1/orders/:id/status
 // @access    Private/Admin
 export const updateOrderStatus = asyncHandler(async (req, res, next) => {
-  const { status, isPaid, isDelivered } = req.body;
+  const { status, isPaid, isDelivered, returnStatus } = req.body;
   const update = {};
 
   if (status) update.status = status;
+  if (returnStatus) update.returnStatus = returnStatus;
   if (typeof isPaid === 'boolean') {
     update.isPaid = isPaid;
     update.paidAt = isPaid ? new Date() : undefined;
@@ -147,6 +153,37 @@ export const createOrder = asyncHandler(async (req, res, next) => {
   );
 
   res.status(201).json({
+    success: true,
+    order: formatOrder(order)
+  });
+});
+
+// @desc      Request order return/refund/exchange
+// @route     PUT /api/v1/orders/:id/return
+// @access    Private
+export const requestOrderReturn = asyncHandler(async (req, res, next) => {
+  const { returnAction, returnReason, returnComments } = req.body;
+
+  const order = await Order.findOne({ _id: req.params.id, user: req.user.id });
+
+  if (!order) {
+    return next(new ErrorResponse('Order not found', 404));
+  }
+
+  if (order.status === 'cancelled' || order.status === 'returned' || order.status === 'return_approved' || order.status === 'exchange_approved') {
+    return next(new ErrorResponse('Order cannot be modified', 400));
+  }
+
+  order.status = returnAction === 'Exchange' ? 'exchange_requested' : 'return_requested';
+  order.returnAction = returnAction || 'Return';
+  order.returnStatus = 'on_hold';
+  order.returnReason = returnReason || 'Fit Issue';
+  order.returnComments = returnComments || '';
+  order.returnedAt = new Date();
+
+  await order.save();
+
+  res.status(200).json({
     success: true,
     order: formatOrder(order)
   });

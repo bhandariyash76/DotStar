@@ -31,6 +31,7 @@ export interface Product {
   inStock: boolean;
   isFeatured: boolean;
   isNew: boolean;
+  quantity?: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -108,7 +109,12 @@ export type OrderStatus =
   | "shipped"
   | "delivered"
   | "cancelled"
-  | "returned";
+  | "returned"
+  | "return_requested"
+  | "return_approved"
+  | "return_rejected"
+  | "exchange_requested"
+  | "exchange_approved";
 
 export interface OrderItem {
   productId: string;
@@ -131,6 +137,11 @@ export interface Order {
   total: number;
   shippingAddress: Address;
   trackingNumber?: string;
+  returnAction?: string;
+  returnStatus?: "none" | "on_hold" | "approved" | "rejected";
+  returnReason?: string;
+  returnComments?: string;
+  returnedAt?: string;
   createdAt: string;
   updatedAt: string;
 }

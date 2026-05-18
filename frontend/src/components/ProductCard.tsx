@@ -55,15 +55,23 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
 
           {/* Badges */}
           <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
-            {product.isNew && (
-              <span className="text-[10px] uppercase tracking-widest font-medium bg-white/90 text-ink px-2 py-0.5 rounded-sm backdrop-blur-md">
-                New
+            {(!product.inStock || product.quantity === 0) ? (
+              <span className="text-[10px] uppercase tracking-widest font-medium bg-red-500 text-white px-2.5 py-1 rounded-sm shadow-md">
+                Out of Stock
               </span>
-            )}
-            {hasDiscount && (
-              <span className="text-[10px] uppercase tracking-widest font-medium bg-accent text-white px-2 py-0.5 rounded-sm">
-                Sale
-              </span>
+            ) : (
+              <>
+                {product.isNew && (
+                  <span className="text-[10px] uppercase tracking-widest font-medium bg-white/90 text-ink px-2 py-0.5 rounded-sm backdrop-blur-md">
+                    New
+                  </span>
+                )}
+                {hasDiscount && (
+                  <span className="text-[10px] uppercase tracking-widest font-medium bg-accent text-white px-2 py-0.5 rounded-sm">
+                    Sale
+                  </span>
+                )}
+              </>
             )}
           </div>
 
@@ -104,15 +112,21 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
             </div>
           </div>
           
-          <button 
-            className="mt-0.5 w-6 h-6 flex items-center justify-center text-ink-secondary hover:text-ink transition-colors"
-            onClick={(e) => {
-              e.preventDefault();
-              addItem(product, product.sizes[0], product.colors[0]);
-            }}
-          >
-            <Plus className="w-4 h-4" />
-          </button>
+          {(!product.inStock || product.quantity === 0) ? (
+            <span className="mt-0.5 text-[10px] uppercase tracking-wider font-semibold text-red-500">
+              Sold Out
+            </span>
+          ) : (
+            <button 
+              className="mt-0.5 w-6 h-6 flex items-center justify-center text-ink-secondary hover:text-ink transition-colors"
+              onClick={(e) => {
+                e.preventDefault();
+                addItem(product, product.sizes[0], product.colors[0]);
+              }}
+            >
+              <Plus className="w-4 h-4" />
+            </button>
+          )}
         </div>
       </Link>
     </div>

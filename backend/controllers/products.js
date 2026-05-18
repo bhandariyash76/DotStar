@@ -16,9 +16,10 @@ const formatProduct = (product) => ({
   sizes: product.sizes || [],
   colors: product.colors || [],
   tags: product.tags || [],
-  inStock: product.inStock,
+  inStock: (product.quantity !== undefined ? product.quantity > 0 : product.inStock) && product.inStock,
   isFeatured: product.isFeatured,
   isNew: product.isNew ?? product.isNewProduct,
+  quantity: product.quantity ?? 10,
   createdAt: product.createdAt,
   updatedAt: product.updatedAt
 });

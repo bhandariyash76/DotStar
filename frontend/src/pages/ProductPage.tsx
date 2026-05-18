@@ -66,16 +66,24 @@ export default function ProductPage() {
           <ProductGallery images={product.images} productName={product.name} />
 
           <section className="lg:sticky lg:top-28 lg:self-start flex flex-col">
-            <div className="flex flex-wrap gap-2 mb-4">
-              {product.isNew && (
-                <span className="text-[10px] uppercase tracking-widest font-medium bg-secondary text-ink px-2.5 py-1 rounded-sm">
-                  New
+            <div className="flex flex-wrap gap-2 mb-4 items-center">
+              {(!product.inStock || product.quantity === 0) ? (
+                <span className="text-[10px] uppercase tracking-widest font-medium bg-red-500 text-white px-2.5 py-1 rounded-sm shadow-md">
+                  Out of Stock
                 </span>
-              )}
-              {hasDiscount && (
-                <span className="text-[10px] uppercase tracking-widest font-medium bg-accent text-white px-2.5 py-1 rounded-sm">
-                  Sale
-                </span>
+              ) : (
+                <>
+                  {product.isNew && (
+                    <span className="text-[10px] uppercase tracking-widest font-medium bg-secondary text-ink px-2.5 py-1 rounded-sm">
+                      New
+                    </span>
+                  )}
+                  {hasDiscount && (
+                    <span className="text-[10px] uppercase tracking-widest font-medium bg-accent text-white px-2.5 py-1 rounded-sm">
+                      Sale
+                    </span>
+                  )}
+                </>
               )}
               <Link
                 to={`/shop?category=${product.categorySlug}`}
@@ -177,13 +185,13 @@ export default function ProductPage() {
               <button
                 type="button"
                 onClick={handleAddToBag}
-                disabled={!product.inStock}
+                disabled={!product.inStock || product.quantity === 0}
                 className={cn(
                   "flex-1 btn-primary disabled:opacity-50 disabled:cursor-not-allowed",
                   added && "bg-accent hover:bg-accent"
                 )}
               >
-                {added ? "Added to bag" : product.inStock ? "Add to bag" : "Out of stock"}
+                {added ? "Added to bag" : (!product.inStock || product.quantity === 0) ? "Out of stock" : "Add to bag"}
               </button>
             </section>
 

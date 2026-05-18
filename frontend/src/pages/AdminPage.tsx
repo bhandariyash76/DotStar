@@ -26,6 +26,11 @@ const statusOptions: OrderStatus[] = [
   "delivered",
   "cancelled",
   "returned",
+  "return_requested",
+  "return_approved",
+  "return_rejected",
+  "exchange_requested",
+  "exchange_approved",
 ];
 
 const emptyForm = {
@@ -43,6 +48,7 @@ const emptyForm = {
   inStock: true,
   isFeatured: false,
   isNew: true,
+  quantity: "10",
 };
 
 const emptyDiscountForm = {
@@ -110,7 +116,7 @@ export default function AdminPage() {
       description: product.description,
       price: String(product.price),
       compareAtPrice: product.compareAtPrice ? String(product.compareAtPrice) : "",
-      image: product.images[0]?.src || "",
+      image: product.images.map((img) => img.src).join(", "),
       category: product.category,
       categorySlug: product.categorySlug,
       sizes: product.sizes.join(", "),
@@ -119,6 +125,7 @@ export default function AdminPage() {
       inStock: product.inStock,
       isFeatured: product.isFeatured,
       isNew: product.isNew,
+      quantity: product.quantity !== undefined ? String(product.quantity) : "10",
     });
   };
 
@@ -135,7 +142,7 @@ export default function AdminPage() {
     compareAtPrice: form.compareAtPrice ? Number(form.compareAtPrice) : undefined,
     currency: "INR",
     images: form.image
-      ? [{ src: form.image, alt: form.name, width: 800, height: 1000 }]
+      ? form.image.split(",").map((url) => ({ src: url.trim(), alt: form.name, width: 800, height: 1000 })).filter((img) => img.src)
       : [],
     categoryName: form.category,
     categorySlug: form.categorySlug,
@@ -152,6 +159,7 @@ export default function AdminPage() {
     isFeatured: form.isFeatured,
     isNew: form.isNew,
     isNewProduct: form.isNew,
+    quantity: Number(form.quantity),
   };
 
   const saveProduct = async (event: FormEvent) => {
@@ -182,13 +190,14 @@ export default function AdminPage() {
     await refreshProducts();
   };
 
-  const updateOrderStatus = async (orderId: string, status: OrderStatus) => {
+  const updateOrderStatus = async (orderId: string, status: OrderStatus, returnStatus?: "none" | "on_hold" | "approved" | "rejected") => {
     if (!token) return;
     await apiRequest(`/orders/${orderId}/status`, {
       method: "PUT",
       token,
       body: JSON.stringify({
         status,
+        returnStatus,
         isDelivered: status === "delivered",
       }),
     });
@@ -264,24 +273,37 @@ export default function AdminPage() {
               <input required placeholder="Product name" value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} className="w-full border border-border bg-primary px-4 py-3 text-sm outline-none focus:border-ink" />
               <input placeholder="Slug (optional)" value={form.slug} onChange={(event) => setForm({ ...form, slug: event.target.value })} className="w-full border border-border bg-primary px-4 py-3 text-sm outline-none focus:border-ink" />
               <textarea required placeholder="Description" value={form.description} onChange={(event) => setForm({ ...form, description: event.target.value })} className="min-h-28 w-full border border-border bg-primary px-4 py-3 text-sm outline-none focus:border-ink" />
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <input required type="number" placeholder="Price" value={form.price} onChange={(event) => setForm({ ...form, price: event.target.value })} className="border border-border bg-primary px-4 py-3 text-sm outline-none focus:border-ink" />
                 <input type="number" placeholder="Compare price" value={form.compareAtPrice} onChange={(event) => setForm({ ...form, compareAtPrice: event.target.value })} className="border border-border bg-primary px-4 py-3 text-sm outline-none focus:border-ink" />
+                <input required type="number" placeholder="Quantity (Stock)" value={form.quantity} onChange={(event) => setForm({ ...form, quantity: event.target.value })} className="border border-border bg-primary px-4 py-3 text-sm outline-none focus:border-ink" />
               </div>
-              <input required placeholder="Image URL" value={form.image} onChange={(event) => setForm({ ...form, image: event.target.value })} className="w-full border border-border bg-primary px-4 py-3 text-sm outline-none focus:border-ink" />
-              <div className="grid grid-cols-2 gap-3">
-                <input required placeholder="Category name" value={form.category} onChange={(event) => setForm({ ...form, category: event.target.value })} className="border border-border bg-primary px-4 py-3 text-sm outline-none focus:border-ink" />
-                <input required placeholder="category-slug" value={form.categorySlug} onChange={(event) => setForm({ ...form, categorySlug: event.target.value })} className="border border-border bg-primary px-4 py-3 text-sm outline-none focus:border-ink" />
+              <textarea required placeholder="Media Image URLs (comma separated for multiple images)" value={form.image} onChange={(event) => setForm({ ...form, image: event.target.value })} className="min-h-20 w-full border border-border bg-primary px-4 py-3 text-sm outline-none focus:border-ink" />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <select required value={form.categorySlug} onChange={(event) => {
+                  const slug = event.target.value;
+                  const name = event.target.options[event.target.selectedIndex].text;
+                  setForm({ ...form, categorySlug: slug, category: name });
+                }} className="border border-border bg-primary px-4 py-3 text-sm outline-none focus:border-ink">
+                  <option value="">Select Collection / Category</option>
+                  <option value="t-shirts">T-Shirts</option>
+                  <option value="bottoms">Bottoms</option>
+                  <option value="hoodies">Hoodies</option>
+                  <option value="outerwear">Outerwear</option>
+                  <option value="shirts">Shirts</option>
+                  <option value="sweatshirts">Sweatshirts</option>
+                </select>
+                <input required placeholder="Category Slug" value={form.categorySlug} readOnly className="border border-border bg-primary px-4 py-3 text-sm outline-none opacity-70 cursor-not-allowed" />
               </div>
               <input required placeholder="Sizes: S, M, L" value={form.sizes} onChange={(event) => setForm({ ...form, sizes: event.target.value })} className="w-full border border-border bg-primary px-4 py-3 text-sm outline-none focus:border-ink" />
               <input required placeholder="Colors: Black:#111111, White:#FFFFFF" value={form.colors} onChange={(event) => setForm({ ...form, colors: event.target.value })} className="w-full border border-border bg-primary px-4 py-3 text-sm outline-none focus:border-ink" />
               <input placeholder="Tags: tee, oversized" value={form.tags} onChange={(event) => setForm({ ...form, tags: event.target.value })} className="w-full border border-border bg-primary px-4 py-3 text-sm outline-none focus:border-ink" />
 
-              <div className="grid grid-cols-3 gap-3 text-caption uppercase tracking-widest text-ink-secondary">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-caption uppercase tracking-widest text-ink-secondary">
                 {(["inStock", "isFeatured", "isNew"] as const).map((field) => (
-                  <label key={field} className="flex items-center gap-2 border border-border px-3 py-3">
-                    <input type="checkbox" checked={form[field]} onChange={(event) => setForm({ ...form, [field]: event.target.checked })} />
-                    {field === "inStock" ? "Stock" : field === "isFeatured" ? "Featured" : "New"}
+                  <label key={field} className="flex items-center gap-2 border border-border px-3 py-3 cursor-pointer hover:text-ink transition-colors">
+                    <input type="checkbox" checked={form[field]} onChange={(event) => setForm({ ...form, [field]: event.target.checked })} className="accent-ink" />
+                    {field === "inStock" ? "In Stock" : field === "isFeatured" ? "Show in Featured Collection" : "Show in Latest Drop"}
                   </label>
                 ))}
               </div>
@@ -381,19 +403,52 @@ export default function AdminPage() {
               ) : (
                 <div className="space-y-3 max-h-[520px] overflow-y-auto pr-1">
                   {orders.map((order) => (
-                    <article key={order.id} className="border border-border p-4">
-                      <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
+                    <article key={order.id} className="border border-border p-5 bg-surface space-y-3">
+                      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-3">
                         <div>
-                          <p className="text-sm font-medium text-ink">#{order.id.slice(-8)}</p>
-                          <p className="text-caption text-ink-muted">{formatPrice(order.total)} · {order.items.length} items</p>
+                          <p className="text-sm font-bold text-ink">Order #{order.id.slice(-8)}</p>
+                          <p className="text-caption text-ink-muted">{formatPrice(order.total)} · {order.items.length} items · Placed: {new Date(order.createdAt).toLocaleString()}</p>
                         </div>
-                        <select value={order.status} onChange={(event) => updateOrderStatus(order.id, event.target.value as OrderStatus)} className="border border-border bg-primary px-3 py-2 text-sm outline-none focus:border-ink">
-                          {statusOptions.map((status) => (
-                            <option key={status} value={status}>{status}</option>
-                          ))}
-                        </select>
+                        <div className="flex items-center gap-3">
+                          <span className="text-caption uppercase tracking-widest text-ink-muted">Status:</span>
+                          <select value={order.status} onChange={(event) => updateOrderStatus(order.id, event.target.value as OrderStatus)} className="border border-border bg-primary px-3 py-2 text-sm outline-none focus:border-ink font-semibold">
+                            {statusOptions.map((status) => (
+                              <option key={status} value={status}>{status}</option>
+                            ))}
+                          </select>
+                        </div>
                       </div>
-                      <p className="text-caption text-ink-muted">{new Date(order.createdAt).toLocaleString()}</p>
+
+                      {/* Customer Query / Return & Exchange On Hold Section */}
+                      {(order.status === "return_requested" || order.status === "exchange_requested" || order.returnStatus === "on_hold" || (order.returnAction && order.returnAction !== "None")) && (
+                        <div className="bg-amber-50/60 border border-amber-200 p-4 rounded-lg flex flex-col gap-2">
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs font-bold text-amber-900 uppercase tracking-wide">
+                              🚨 Customer Query: {order.returnAction || "Return"} Requested <span className="text-amber-700">({order.returnStatus === "on_hold" ? "ON HOLD - PENDING APPROVAL" : order.returnStatus?.toUpperCase()})</span>
+                            </span>
+                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-widest ${
+                              order.returnStatus === "approved" ? "bg-green-200 text-green-900" :
+                              order.returnStatus === "rejected" ? "bg-red-200 text-red-900" :
+                              "bg-amber-200 text-amber-900"
+                            }`}>
+                              {order.returnStatus === "on_hold" ? "Action Required" : order.returnStatus}
+                            </span>
+                          </div>
+                          <p className="text-caption text-ink-secondary font-medium">Issue / Reason: {order.returnReason || "Fit Issue"} {order.returnComments ? `(${order.returnComments})` : ""}</p>
+                          
+                          {/* Admin Action Buttons */}
+                          {order.returnStatus === "on_hold" && (
+                            <div className="flex gap-3 pt-2 border-t border-amber-200/60">
+                              <button type="button" onClick={() => updateOrderStatus(order.id, order.returnAction === "Exchange" ? "exchange_approved" : "return_approved", "approved")} className="bg-green-600 hover:bg-green-700 text-white font-semibold text-xs px-4 py-2 rounded transition-colors shadow-sm">
+                                Approve {order.returnAction || "Return"}
+                              </button>
+                              <button type="button" onClick={() => updateOrderStatus(order.id, order.returnAction === "Exchange" ? "delivered" : "return_rejected", "rejected")} className="bg-red-600 hover:bg-red-700 text-white font-semibold text-xs px-4 py-2 rounded transition-colors shadow-sm">
+                                Reject Request
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </article>
                   ))}
                 </div>
